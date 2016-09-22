@@ -1,5 +1,5 @@
 {
-    "name": "evaengine/eva-sms",
+    "name": "wallstreetcn/eva-sms",
     "require": {
         "guzzlehttp/guzzle": "5.2.*"
     },
