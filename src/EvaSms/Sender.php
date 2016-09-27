@@ -41,6 +41,9 @@ class Sender
      */
     protected $provider;
 
+    /**
+     * @var array
+     */
     protected static $configArray = [];
 
     /**
