@@ -138,7 +138,7 @@ class Sender
      */
     public function getProvider($mobileNumber)
     {
-        $config = IoC::get('config');
+        $config = $this->config;
         $adapterMapping = array(
             'submail' => 'Eva\EvaSms\Providers\Submail',
             'submailintl' => 'Eva\EvaSms\Providers\SubmailIntlAdapter',

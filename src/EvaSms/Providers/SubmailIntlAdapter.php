@@ -88,8 +88,8 @@ class SubmailIntlAdapter implements ProviderInterface
      */
     public function isCountrySupported($number)
     {
-        $config = include('config.php');
-        $values = array_values($config['Phone_Prefix']);
+        $config = $this->config;
+        $values = array_values($config->Phone_Prefix);
         //1 because '+' is ignored in searching
         if (in_array(substr($number, 1, 1), $values, true)
             or in_array(substr($number, 1, 2), $values, true)

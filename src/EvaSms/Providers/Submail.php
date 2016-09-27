@@ -113,7 +113,7 @@ class Submail implements ProviderInterface
      * @param $params
      * @return string
      */
-    protected function getSignature($params)
+    public function getSignature($params)
     {
         ksort($params);
         reset($params);
