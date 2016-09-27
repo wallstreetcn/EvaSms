@@ -41,6 +41,8 @@ class Sender
      */
     protected $provider;
 
+    protected static $configArray = [];
+
     /**
      * @param $timeout
      */
@@ -50,12 +52,24 @@ class Sender
     }
 
     /**
+     * @param $configArray
+     */
+    public static function setConfigArray($configArray)
+    {
+        self::$configArray = $configArray;
+    }
+
+    /**
      * @param $countryCode
      */
     public static function setDefaultCountryCode($countryCode)
     {
         self::$defaultCountryCode = $countryCode;
+    }
 
+    public static function getConfigArray()
+    {
+        return self::$configArray;
     }
 
     /**
@@ -138,7 +152,7 @@ class Sender
      */
     public function getProvider($mobileNumber)
     {
-        $config = $this->config;
+        $config = $this->getConfigArray();
         $adapterMapping = array(
             'submail' => 'Eva\EvaSms\Providers\Submail',
             'submailintl' => 'Eva\EvaSms\Providers\SubmailIntlAdapter',
@@ -154,9 +168,9 @@ class Sender
             throw new Exception\RuntimeException(sprintf('No sms provider found by %s', $adapterClass));
         }
         if ($adapterKey === 'submailintl') {
-            $provider = new $adapterClass($config->smsSenderIntl->appid, $config->smsSenderIntl->appkey);
+            $provider = new $adapterClass($config['smsSenderIntl']['appid'], $config['smsSenderIntl']['appkey'],$config);
         } else {
-            $provider = new $adapterClass($config->smsSender->appid, $config->smsSender->appkey);
+            $provider = new $adapterClass($config['smsSender']['appid'], $config['smsSender']['appkey'], $config);
         }
         return $provider;
     }

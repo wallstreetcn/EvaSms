@@ -26,6 +26,7 @@ class SubmailIntlAdapter implements ProviderInterface
     protected $appid;
     protected $appkey;
     protected $signature;
+    protected $configArray;
 
     public function sendStandardMessage(StandardMessage $message)
     {
@@ -53,7 +54,7 @@ class SubmailIntlAdapter implements ProviderInterface
             'vars' => json_encode($message->getVars()),
             'signature' => $this->appkey,
         );
-        
+
         $client = Sender::getHttpClient();
         $response = $client->post(self::API_URL_INTL, array('body' => $params));
         $responseArr = $response->json();
@@ -88,8 +89,8 @@ class SubmailIntlAdapter implements ProviderInterface
      */
     public function isCountrySupported($number)
     {
-        $config = $this->config;
-        $values = array_values($config->Phone_Prefix);
+        $config = $this->configArray;
+        $values = array_values($config['Phone_Prefix']);
         //1 because '+' is ignored in searching
         if (in_array(substr($number, 1, 1), $values, true)
             or in_array(substr($number, 1, 2), $values, true)
@@ -103,12 +104,13 @@ class SubmailIntlAdapter implements ProviderInterface
 
     private $submailDom;
 
-    public function __construct($appid, $appkey)
+    public function __construct($appid, $appkey, $configArray)
     {
         $submailDom = new Submail($appid, $appkey);
         $this->submailDom = $submailDom;
         $this->appid = $appid;
         $this->appkey = $appkey;
+        $this->configArray = $configArray;
     }
 
 }
