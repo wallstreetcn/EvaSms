@@ -1,7 +1,7 @@
 {
     "name": "wallstreetcn/eva-sms",
     "require": {
-        "guzzlehttp/guzzle": "^6"
+        "guzzlehttp/guzzle": "6.2.1"
     },
     "require-dev": {
         "satooshi/php-coveralls": "dev-master"
