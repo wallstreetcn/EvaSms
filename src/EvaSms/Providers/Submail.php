@@ -96,7 +96,7 @@ class Submail implements ProviderInterface
         */
 
         $client = Sender::getHttpClient();
-        $response = $client->post(self::API_URL, array('form' => $params));
+        $response = $client->post(self::API_URL, array('body' => $params));
         $responseArr = json_decode($response->getBody(), true);
         $result = new StandardResult($message, $response);
         if (isset($responseArr['status'])) {
