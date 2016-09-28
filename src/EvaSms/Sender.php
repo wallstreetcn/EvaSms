@@ -42,6 +42,11 @@ class Sender
     protected $provider;
 
     /**
+     * @var array
+     */
+    protected static $configArray = [];
+
+    /**
      * @param $timeout
      */
     public static function setDefaultTimeout($timeout)
@@ -50,12 +55,24 @@ class Sender
     }
 
     /**
+     * @param $configArray
+     */
+    public static function setConfigArray($configArray)
+    {
+        self::$configArray = $configArray;
+    }
+
+    /**
      * @param $countryCode
      */
     public static function setDefaultCountryCode($countryCode)
     {
         self::$defaultCountryCode = $countryCode;
+    }
 
+    public static function getConfigArray()
+    {
+        return self::$configArray;
     }
 
     /**
@@ -94,7 +111,7 @@ class Sender
      */
     public function sendTemplateMessage($mobileNumber, $templateId, array $vars = array())
     {
-        $provider = $this->getProvider();
+        $provider = $this->getProvider($mobileNumber);
         if (!$provider) {
             throw new \RuntimeException('No provider found');
         }
@@ -117,7 +134,7 @@ class Sender
      */
     public function sendStandardMessage($mobileNumber, $messageBody)
     {
-        $provider = $this->getProvider();
+        $provider = $this->getProvider($mobileNumber);
         if (!$provider) {
             throw new \RuntimeException('No provider found');
         }
@@ -136,9 +153,29 @@ class Sender
     /**
      * @return ProviderInterface
      */
-    public function getProvider()
+    public function getProvider($mobileNumber)
     {
-        return $this->provider;
+        $config = $this->getConfigArray();
+        $adapterMapping = array(
+            'submail' => 'Eva\EvaSms\Providers\Submail',
+            'submailintl' => 'Eva\EvaSms\Providers\SubmailIntlAdapter',
+        );
+        if (substr($mobileNumber, 0, 3) === '+86') {
+            $adapterKey = 'submail';
+        } else {
+            $adapterKey = 'submailintl';
+        }
+        $adapterKey = false === strpos($adapterKey, '\\') ? strtolower($adapterKey) : $adapterKey;
+        $adapterClass = empty($adapterMapping[$adapterKey]) ? $adapterKey : $adapterMapping[$adapterKey];
+        if (false === class_exists($adapterClass)) {
+            throw new Exception\RuntimeException(sprintf('No sms provider found by %s', $adapterClass));
+        }
+        if ($adapterKey === 'submailintl') {
+            $provider = new $adapterClass($config['smsSenderIntl']['appid'], $config['smsSenderIntl']['appkey'],$config);
+        } else {
+            $provider = new $adapterClass($config['smsSender']['appid'], $config['smsSender']['appkey'], $config);
+        }
+        return $provider;
     }
 
     /**
