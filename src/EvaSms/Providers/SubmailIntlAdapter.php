@@ -43,7 +43,7 @@ class SubmailIntlAdapter implements ProviderInterface
             throw new UnsupportedException(sprintf(
                 'Mobile number %s not supported by provider %s',
                 $number,
-                'submail'
+                'submailintl'
             ));
         }
         //Raw auth by appkey
