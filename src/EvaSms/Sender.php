@@ -157,7 +157,9 @@ class Sender
             'submail' => 'Eva\EvaSms\Providers\Submail',
             'submailintl' => 'Eva\EvaSms\Providers\SubmailIntlAdapter',
         );
-        if (substr($mobileNumber, 0, 3) === '+86') {
+        if (substr($mobileNumber, 0, 1) !== '+') {
+            $adapterKey = 'submail';
+        } elseif (substr($mobileNumber, 0, 3) === '+86') {
             $adapterKey = 'submail';
         } else {
             $adapterKey = 'submailintl';
