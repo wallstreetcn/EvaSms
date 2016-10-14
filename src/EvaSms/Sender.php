@@ -116,7 +116,7 @@ class Sender
             throw new \RuntimeException('No provider found');
         }
 
-        $mobileNumber = $mobileNumber{0} === '+' ? $mobileNumber : self::$defaultCountryCode . $mobileNumber;
+        $mobileNumber = $mobileNumber{0} === '+' ? $mobileNumber : (self::$defaultCountryCode . $mobileNumber);
 
         if (!self::isMobileNumberValid($mobileNumber)) {
             throw new InvalidNumberException(sprintf("Mobile number %s invalid", $mobileNumber));
